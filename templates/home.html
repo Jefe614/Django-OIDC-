@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}My Shop{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        main {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+        form, .logout-link {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>Welcome to my shop</h1>
+
+        {% if user.is_authenticated %}
+        <p class="mb-3">Hi {{ user.username }} - {{ user.email }}!</p>
+        <p class="logout-link"><a href="{% url 'logout' %}" class="btn btn-danger">Log Out</a></p>
+
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if registration_success %}
+            <h2>Registration Details</h2>
+            <p>Name: {{ registered_customer.name }}</p>
+            <p>Code: {{ registered_customer.code }}</p>
+        {% else %}
+            <h2>Customer Registration</h2>
+            <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                {{ registration_form.as_p }}
+                <button type="submit" name="registration_form_submit" class="btn btn-primary">Register</button>
+            </form>
+        {% endif %}
+
+        <h2>Create Order</h2>
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ order_form.as_p }}
+            <button type="submit" name="order_form_submit" class="btn btn-success">Submit Order</button>
+        </form>
+
+        {% else %}
+        <p class="mb-3">You are not logged in</p>
+        <p><a href="{% url 'login' %}" class="btn btn-primary">Log In</a></p>
+        {% endif %}
+    </main>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
