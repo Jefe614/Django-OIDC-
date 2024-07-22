@@ -5,6 +5,10 @@ from .serializers import CustomerSerializer, OrderSerializer
 from django.shortcuts import render,redirect
 from .forms import OrderForm,CustomerRegistrationForm
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from django.utils.dateparse import parse_datetime
+
 
 
 
@@ -59,3 +63,24 @@ def login(request):
 
 def logout(request):
     return render(request, 'logout.html')
+
+
+@require_GET
+def search_orders(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    
+    if not start_date or not end_date:
+        return JsonResponse({'error': 'Please provide both start_date and end_date'}, status=400)
+    
+    try:
+        start_date = parse_datetime(start_date)
+        end_date = parse_datetime(end_date)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid date format'}, status=400)
+    
+    orders = Order.objects.filter(time__range=(start_date, end_date))
+    order_list = list(orders.values('id', 'customer__name', 'item', 'amount', 'time'))
+    
+    return JsonResponse(order_list, safe=False)
+

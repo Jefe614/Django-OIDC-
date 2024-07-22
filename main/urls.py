@@ -12,4 +12,6 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('api/', include(router.urls)),
+    path('search-orders/', views.search_orders, name='search_orders'),
+
 ]

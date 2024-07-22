@@ -16,33 +16,39 @@
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'home' %}">My Shop</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
     <main class="container">
         <h1>Welcome to my shop</h1>
 
         {% if user.is_authenticated %}
         <p class="mb-3">Hi {{ user.username }} - {{ user.email }}!</p>
-        <p class="logout-link"><a href="{% url 'logout' %}" class="btn btn-danger">Log Out</a></p>
 
-        {% if messages %}
-            <div class="alert alert-success">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {% if registration_success %}
-            <h2>Registration Details</h2>
-            <p>Name: {{ registered_customer.name }}</p>
-            <p>Code: {{ registered_customer.code }}</p>
-        {% else %}
-            <h2>Customer Registration</h2>
-            <form method="post" action="{% url 'home' %}">
-                {% csrf_token %}
-                {{ registration_form.as_p }}
-                <button type="submit" name="registration_form_submit" class="btn btn-primary">Register</button>
-            </form>
-        {% endif %}
+        <h2>Customer Registration</h2>
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ registration_form.as_p }}
+            <button type="submit" name="registration_form_submit" class="btn btn-primary">Register</button>
+        </form>
 
         <h2>Create Order</h2>
         <form method="post" action="{% url 'home' %}">
@@ -51,12 +57,27 @@
             <button type="submit" name="order_form_submit" class="btn btn-success">Submit Order</button>
         </form>
 
+        <h2>Search Orders</h2>
+        <form method="get" action="{% url 'search_orders' %}">
+            <div class="form-group">
+                <label for="start_date">Start Date:</label>
+                <input type="datetime-local" id="start_date" name="start_date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date:</label>
+                <input type="datetime-local" id="end_date" name="end_date" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-info">Search</button>
+        </form>
+
         {% else %}
         <p class="mb-3">You are not logged in</p>
         <p><a href="{% url 'login' %}" class="btn btn-primary">Log In</a></p>
         {% endif %}
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
