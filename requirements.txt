@@ -2,6 +2,7 @@ asgiref==3.8.1
 certifi==2024.7.4
 charset-normalizer==3.3.2
 coverage==7.6.0
+decouple==0.0.7
 defusedxml==0.7.1
 dj-database-url==2.2.0
 Django==4.2.14
@@ -12,8 +13,10 @@ future==1.0.0
 gunicorn==22.0.0
 idna==3.7
 packaging==24.1
+psycopg2-binary==2.9.9
 pycryptodomex==3.20.0
 pyjwkest==1.4.2
+python-decouple==3.8
 python3-openid==3.2.0
 requests==2.32.3
 six==1.16.0
